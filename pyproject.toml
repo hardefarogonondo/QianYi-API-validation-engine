@@ -1,0 +1,15 @@
+[project]
+name = "QianYi-API-validation-engine"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "hardefarogonondo", email = "hardefarogonondo@gmail.com"},
+]
+dependencies = ["click>=8.3.1", "pandas>=2.3.3", "sdk-etl @ git+ssh://git@bitbucket.org/shipperid/sdk-etl@0.0.11-rc1", "google-cloud-bigquery>=3.40.1", "cryptography>=46.0.5"]
+requires-python = "==3.10.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
