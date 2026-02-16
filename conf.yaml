@@ -35,12 +35,9 @@ tasks:
       serviceType: GLINK_QUERY_ITEM_NOTIFY
       response_list_key: itemList
       fullload_hours: 8760
+    search_settings:
+      target_columns: ["sku", "item_name", "bar_code"]
+      keywords: ["SKU123", "KEYWORD_B", "PROMO_ITEM_2026"]
     flatten:
       - barcodeList
       - packagingList
-  wms_sku_barcodeList:
-    foreign_key: sku
-    source_key: barcodeList
-  wms_sku_packagingList:
-    foreign_key: sku
-    source_key: packagingList
