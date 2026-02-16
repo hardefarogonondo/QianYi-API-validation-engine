@@ -1,0 +1,46 @@
+# Default Pipeline Settings
+_*: &pipeline
+  retry: 5
+  retry_wait_time: 2.0
+
+# Default API Parameters
+_*: &default_params
+  page_size: 200
+  incremental_hours: 48
+  fullload_hours: 720  # 1 Month (30 days)
+  # fullload_hours: 1440 # 2 Months (60 days)
+  # fullload_hours: 2160 # 3 Months (90 days)
+  # fullload_hours: 4320 # 6 Months (180 days)
+  # fullload_hours: 8760 # 1 Year (365 days)
+  # api_timeout: 3600 # 1 Hour
+  api_timeout: 7200 # 2 Hours
+
+# Base configuration
+_*: &base
+  <<: *pipeline
+  wait_duration: 100
+  gcp_project_id: {{$.secret.data_common.general.creds.wms_qianyi.gcp_project_id}} # Convert to .env
+  merchant_table_id: "shipping.mysql_merchantdb_merchant_by_honeywell"
+  warehouse_table_id: "fulfillment.mysql_productdb_qianyi_warehouse"
+  wms_host_ref: &wms_host_val {{$.secret.data_common.general.creds.wms_qianyi.host}} # Convert to .env
+  erp_host_ref: &erp_host_val {{$.secret.data_common.general.creds.erp_qianyi.host}} # Convert to .env
+
+tasks:
+  wms_sku:
+    <<: *base
+    host: *wms_host_val
+    endpoint: /gateway/api/glink
+    params:
+      <<: *default_params
+      serviceType: GLINK_QUERY_ITEM_NOTIFY
+      response_list_key: itemList
+      fullload_hours: 8760
+    flatten:
+      - barcodeList
+      - packagingList
+  wms_sku_barcodeList:
+    foreign_key: sku
+    source_key: barcodeList
+  wms_sku_packagingList:
+    foreign_key: sku
+    source_key: packagingList
